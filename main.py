@@ -34,6 +34,6 @@ def main():
         balanco = balanco[1:]
 
         # first column place the title as the name of the company
-        balanco.iloc[0,0]
+        balanco.iloc[0,0] = 
 
 main()
