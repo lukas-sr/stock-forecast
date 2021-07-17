@@ -1,2 +1,5 @@
 # stock-forecast
-Stock forecast of the Brazilian stock exchange (B3) in Python
+Stock forecast of the brazilian stock exchange (B3) using python
+
+pip3 install pandas
+pip3 install pandas_datareader
