@@ -13,7 +13,7 @@ def StockNameImportation():
 
     return new, stock_list
 
-def main():
+if __name__ == "__main__":
     stock_names, stock_files = StockNameImportation()
 
     # create a dictionary with the ticker information removed from the statements folder 
@@ -24,16 +24,30 @@ def main():
     #       }
 
     fund = {}
-    
+     
     for file_name in stock_files:
-        balanco = pd.read_excel(f'statements/{file_name}', sheet_name=0)
-        dre = pd.read_excel(f'statements/{file_name}', sheet_name=1)
+        name = file_name[-9:-4]
+        if "11" in name:
+            name = file_name[-10:-4]
+
+        if name in stock_names:
+            balanco = pd.read_excel(f'statements/{file_name}', sheet_name=0)
         
-        # turn first line into a header
-        balanco.columns = balanco.iloc[0]
-        balanco = balanco[1:]
+            # turn first line into a header
+            balanco.columns = balanco.iloc[0]
+            balanco = balanco[1:]
 
-        # first column place the title as the name of the company
-        balanco.iloc[0,0] = 
+            # first column place the title as the name of the company
+            balanco = balanco.set_index(name) 
 
-main()
+            dre = pd.read_excel(f'statements/{file_name}', sheet_name=1)
+        
+            dre.columns = dre.iloc[0]
+            dre = dre[1:]
+
+            dre = dre.set_index(name)
+
+            fund[name] = balanco.append(dre)
+            print(fund)
+            break
+
