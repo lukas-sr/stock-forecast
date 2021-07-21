@@ -33,16 +33,16 @@ if __name__ == "__main__":
         if "11" in name:
             name = file_name[3:9]
 
-        balanco = pd.read_excel(f'statements/{file_name}', sheet_name=0)
+        statem = pd.read_excel(f'statements/{file_name}', sheet_name=0)
         
         # first column place the title as the name of the company
-        balanco.iloc[0,0] = name 
+        statem.iloc[0,0] = name 
 
         # turn first line into a header and exclude the duplicated
-        balanco.columns = balanco.iloc[0]
-        balanco = balanco[1:]
+        statem.columns = statem.iloc[0]
+        statem = statem[1:]
 
-        balanco = balanco.set_index(name)
+        statem = statem.set_index(name)
      
         # do the same to the 'dre's
         dre = pd.read_excel(f'statements/{file_name}', sheet_name=1)
@@ -54,8 +54,38 @@ if __name__ == "__main__":
 
         dre = dre.set_index(name)
 
-        fund[name] = balanco.append(dre)
+        fund[name] = statem.append(dre)
         
-        print(fund)
-        break
+    # to print all the dictionary called fund uncoment
+    # ================================================
+    # print(fund)
+    
 
+    # Add the Quotation dataframe
+    # Format of the standard dataframe
+    # Columns:
+    # | Date | High | Low | Open | Close | Volume | AdjClose | Company
+    # 
+    # 'Adj Close' is the value of the stock, adjusted by the company
+    # dividends and another distributions
+    # 'Adj Close' so, will be our reference
+    quotation_df = pd.read_excel('Quotations.xlsx')
+
+    # Create a dictionary for quotations filtred by company
+    quotation = {}
+
+    for company in quotation_df["Company"].unique():
+        quotation[company] = quotation_df.loc[quotation_df['Company']==company, :]
+    # to print all the dictionary called quotation uncoment
+    # =====================================================
+    # print(quotation)
+
+    # TODO to exclude all the empty lines in Quotation and Fundamentus
+    for company in stock_names:
+        if (quotation[company].isnull().values.any()):
+            quotation.pop(company)
+            fund.pop(company)
+
+    # Update stock names list
+    stock_names = list(quotation.keys())
+    print(len(stock_names))
